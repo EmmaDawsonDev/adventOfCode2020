@@ -639,26 +639,79 @@ for (el of dataArr) {
   dataArr2.push(el.split(" "));
 }
 
-let accumulated = [];
-let usedIndex = [];
+//dataArr2[118][0] = "jmp";
 
-for (let i = 0; i < dataArr2.length; i++) {
-  if (usedIndex.includes(i)) {
-    console.log(accumulated);
-    break;
+let data3 = `nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6`;
+
+let dataArr3a = data3.split("\n");
+let dataArr3 = [];
+for (el of dataArr3a) {
+  dataArr3.push(el.split(" "));
+}
+//console.log(dataArr3);
+
+//console.log(data3copy);
+createsLoopOnChange = [];
+
+for (let j = 440; j < 441; j++) {
+  let accumulated = [];
+  let usedIndex = [];
+  if (dataArr2[j][0] === "nop") {
+    dataArr2[j][0] = "jmp";
+  } else if (dataArr2[j][0] === "jmp") {
+    dataArr2[j][0] = "nop";
   }
-  usedIndex.push(i);
-  //console.log(dataArr2[i][0]);
-  if (dataArr2[i][0] === "acc") {
-    accumulated.push(dataArr2[i][1]);
-  } else if (dataArr2[i][0] === "jmp") {
-    i = i + Number(dataArr2[i][1]) - 1;
+  for (let i = 0; i < dataArr2.length; i++) {
+    if (usedIndex.includes(i)) {
+      if (dataArr2[j][0] === "nop") {
+        dataArr2[j][0] = "jmp";
+      } else if (dataArr2[j][0] === "jmp") {
+        dataArr2[j][0] = "nop";
+      }
+      //console.log("loop");
+      createsLoopOnChange.push(j);
+      break;
+    }
+    usedIndex.push(i);
+    //console.log(dataArr2[i][0]);
+    if (dataArr2[i][0] === "acc") {
+      accumulated.push(dataArr2[i][1]);
+    } else if (dataArr2[i][0] === "jmp") {
+      i = i + Number(dataArr2[i][1]) - 1;
+    }
   }
 }
+
+console.log(createsLoopOnChange);
+
+// for (let i = 0; i < dataArr2.length; i++) {
+//   if (usedIndex.includes(i)) {
+//     console.log("loop");
+//     break;
+//   }
+//   usedIndex.push(i);
+//   //console.log(dataArr2[i][0]);
+//   if (dataArr2[i][0] === "acc") {
+//     accumulated.push(dataArr2[i][1]);
+//   } else if (dataArr2[i][0] === "jmp") {
+//     i = i + Number(dataArr2[i][1]) - 1;
+//   }
+// }
 
 //console.log(accumulated);
 
 //console.log(usedIndex);
 
-const total = accumulated.reduce((a, b) => a + Number(b), 0);
-console.log(total);
+// const total = accumulated.reduce((a, b) => a + Number(b), 0);
+// console.log("total: ", total);
+
+// console.log(usedIndex.length);
+// console.log(dataArr2.length);
